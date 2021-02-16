@@ -1,0 +1,54 @@
+#!/bin/bash
+
+# based on https://gist.github.com/corny/7a07f5ac901844bd20c9
+
+# This file can not have a file extension.
+# Cron run-parts will not run it if it has one.
+# See https://gist.github.com/andyshinn/3ae01fa13cb64c9d36e7
+
+update_host()
+{
+    local hostname=$1
+
+    if [ -e /usr/bin/curl ]; then
+        bin="curl -fsS -o /dev/null"
+    elif [ -e /usr/bin/wget ]; then
+        bin="wget -qO-"
+    else
+        echo "$(date +"%Y-%m-%d %T"): neither curl nor wget found"
+        return 1
+    fi
+
+    # scope global to return the external ip with subnet mask
+    current_ip=$(ip -6 addr show "$DYNV6_NETWORK_DEVICE" | grep "scope global" | grep -oP '(?<=inet6\s)[\da-f:]+\/\d+')
+    current_ip_file=/root/current_ip/${hostname}
+    local old
+    [ -e "$current_ip_file" ] && old="$(cat "$current_ip_file")"
+
+    #echo "old: $old, current_ip: $current_ip"
+    if [ "$old" = "$current_ip" ]; then
+        #echo "IP address unchanged."
+        return
+    fi
+
+    echo "$(date +"%Y-%m-%d %T"): New ip address detected: $current_ip. Updating ip for $hostname."
+
+    # send addresses to dynv6
+    echo "$(date +"%Y-%m-%d %T"): Calling: $bin https://dynv6.com/api/update?hostname=$hostname&token=$DYNV6_TOKEN&ipv6=$current_ip"
+    $bin "https://dynv6.com/api/update?hostname=$hostname&token=$DYNV6_TOKEN&ipv6=$current_ip"
+
+    # save current address
+    echo "$current_ip" > "$current_ip_file"
+}
+
+# Start working
+
+mapfile -t myarray < <(echo "$DYNV6_ZONES" | tr ',' '\n')
+
+#echo "My array:" "${myarray[@]}"
+#echo "Number of elements in the array:" "${#myarray[@]}"
+
+for current_host in "${myarray[@]}"; do
+    #echo "$current_host"
+    update_host "$current_host"
+done

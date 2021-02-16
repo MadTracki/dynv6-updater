@@ -1,0 +1,13 @@
+version: "3.7"
+
+services:
+  dynv6-updater:
+    image: sarasmiseth/dynv6-updater
+    restart: unless-stopped
+    environment:
+      - DYNV6_ZONES=dynv6.example.com,second.example.com
+      - DYNV6_TOKEN=change_to_your_token
+      - DYNV6_NETWORK_DEVICE=docker0
+    volumes:
+      - ./current_ip:/root/current_ip
+    network_mode: host

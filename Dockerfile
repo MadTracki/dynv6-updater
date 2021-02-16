@@ -1,19 +1,19 @@
-FROM python:3
+FROM alpine:latest
 
-RUN apt-get -y update && apt-get -y upgrade
-RUN apt-get install -y cron
+RUN apk update && apk add \
+    bash \
+    grep \
+    && rm -rf /var/cache/apk/*
 
-RUN mkdir /code
-WORKDIR /code
-ADD . /code/
-RUN chmod 0755 /code/*.sh
+RUN echo "*	*	*	*	*	run-parts /etc/periodic/1min" >> /etc/crontabs/root
 
-RUN touch /code/cron.log
+RUN mkdir /dynv6
+RUN mkdir /etc/periodic/1min
+RUN mkdir /root/current_ip
 
-COPY cjob /etc/cron.d/cjob
-RUN chmod 0744 /etc/cron.d/cjob
-RUN crontab /etc/cron.d/cjob
+ADD ./dynv6/ /dynv6/
+RUN chmod 0755 /dynv6/*
 
-#CMD cron -f
+RUN mv /dynv6/dynv6 /etc/periodic/1min
 
-ENTRYPOINT ["/bin/sh", "/code/entrypoint.sh"]
+ENTRYPOINT ["/dynv6/entrypoint.sh"]

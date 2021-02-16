@@ -64,9 +64,10 @@ The following functions are conceivable for later versions, but were not impleme
 
 Appreciation to  
 
-- [@corny](https://gist.github.com/corny)   and  
-- [@pulsar256](https://gist.github.com/pulsar256)   and  
-- [@nephilim75](https://gist.github.com/nephilim75)  
+- [corny](https://gist.github.com/corny)
+- [pulsar256](https://gist.github.com/pulsar256)
+- [nephilim75](https://gist.github.com/nephilim75)
+- [R. Fuehrer](https://github.com/rfuehrer)
 
 whose adaptations and inspirations are included in the image and script. 
 
@@ -74,6 +75,10 @@ In reference to gists:
 
 [https://gist.github.com/corny/7a07f5ac901844bd20c9](https://gist.github.com/corny/7a07f5ac901844bd20c9)
 [https://gist.github.com/pulsar256/42313fcb2d3ae805805f](https://gist.github.com/pulsar256/42313fcb2d3ae805805f)
+
+## Fork
+
+Forked from [rfuehrer/dynv6-updater](https://github.com/rfuehrer/dynv6-updater).
 
 ## License
 
