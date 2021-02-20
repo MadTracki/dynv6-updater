@@ -6,8 +6,12 @@
 # Cron run-parts will not run it if it has one.
 # See https://gist.github.com/andyshinn/3ae01fa13cb64c9d36e7
 
+# to use trap only in this function: sub-shell
+# See https://stackoverflow.com/a/23849360
 update_host()
-{
+(
+    trap return ERR
+
     local hostname=$1
 
     if [ -e /usr/bin/curl ]; then
@@ -39,7 +43,7 @@ update_host()
 
     # save current address
     echo "$current_ip" > "$current_ip_file"
-}
+)
 
 # Start working
 
