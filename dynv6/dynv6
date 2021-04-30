@@ -38,7 +38,7 @@ update_host()
     echo "$(date +"%Y-%m-%d %T"): New ip address detected: $current_ip. Updating ip for $hostname."
 
     if [ "$DYNV6_USE_AUTO" = "true" ]; then
-        $bin "https://ipv6.dynv6.com/api/update?hostname=$hostname&token=$DYNV6_TOKEN&ipv6=auto"
+        $bin "https://ipv6.dynv6.com/api/update?hostname=$hostname&token=$DYNV6_TOKEN&ipv6=auto&ipv6prefix=auto"
     else
         # send addresses to dynv6
         echo "$(date +"%Y-%m-%d %T"): Calling: $bin https://dynv6.com/api/update?hostname=$hostname&token=$DYNV6_TOKEN&ipv6=$current_ip"
