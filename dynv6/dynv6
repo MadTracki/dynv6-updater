@@ -24,7 +24,7 @@ update_host()
     fi
 
     # scope global to return the external ip with subnet mask
-    current_ip=$(ip -6 addr show "$DYNV6_NETWORK_DEVICE" | grep "scope global" | grep -oP '(?<=inet6\s)[\da-f:]+\/\d+')
+    current_ip=$(ip -6 addr show "$DYNV6_NETWORK_DEVICE" | grep "scope global" | grep "$DYNV6_IP_ADDRESS_FILTER" | grep -oP '(?<=inet6\s)[\da-f:]+\/\d+')
     current_ip_file=/root/current_ip/${hostname}
     local old
     [ -e "$current_ip_file" ] && old="$(cat "$current_ip_file")"
