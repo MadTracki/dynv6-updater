@@ -8,7 +8,8 @@ services:
       - DYNV6_ZONES=dynv6.example.com,second.example.com
       - DYNV6_TOKEN=change_to_your_token
       - DYNV6_NETWORK_DEVICE=docker0
-      - DYNV6_IP_ADDRESS_FILTER=/64
+      #- DYNV6_USE_AUTO=true
+      #- DYNV6_IP_ADDRESS_FILTER=/64
     volumes:
       - ./current_ip:/root/current_ip
     network_mode: host
