@@ -23,8 +23,8 @@ update_host()
         return 1
     fi
 
-    # scope global to return the external ip with subnet mask
-    current_ip=$(ip -6 addr show "$DYNV6_NETWORK_DEVICE" | grep "scope global" | grep "$DYNV6_IP_ADDRESS_FILTER" | grep -oP '(?<=inet6\s)[\da-f:]+\/\d+')
+    # scope global to return the external ip with subnet mask and don't include deprecated addresses
+    current_ip=$(ip -6 addr show "$DYNV6_NETWORK_DEVICE" | grep "scope global" | grep -v "deprecated" | grep "$DYNV6_IP_ADDRESS_FILTER" | grep -oP '(?<=inet6\s)[\da-f:]+\/\d+')
     if [[ -z "$current_ip" ]]; then
         echo "$(date +"%Y-%m-%d %T"): Unable to detect current ip. Exiting."
         return 1
