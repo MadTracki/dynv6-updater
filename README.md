@@ -21,55 +21,55 @@ This image is for use in a private network behind a router. Make sure that the s
 
 ## Installation
 
-A prepared image can be obtained from my Docker Hub: [https://hub.docker.com/r/rfuehrer/dynv6-updater](https://hub.docker.com/r/rfuehrer/dynv6-updater)
+A prepared image can be obtained from my [Docker Hub](https://hub.docker.com/r/sarasmiseth/dynv6-updater).
 
 ### Build
 
 The image can be created with the following command:
 
 ```bash
-docker build --pull -t dynv6/dynv6-updater .
+docker build . -t dynv6-updater
 ```
 
-### Run
+## Run
 
-After the image has been created, the container can be started with the following command. For the required environment variables, see boitte under `Configuration`.
+I recommend using `docker-compose`.
+See example [docker-compose.yml](https://github.com/SaraSmiseth/dynv6-updater/blob/dev/docker-compose.yml).
+Adjust the environment variables to match your use case and then just start the image with `docker compose up -d`.
 
-```bash
-docker run -e DYNV6_TOKEN="<token>" -e DYNV6_ZONES="<zones>" -d dynv6/dyn6-updater
-```
+### Docker tags
 
-## Configuration
+<https://hub.docker.com/r/sarasmiseth/dynv6-updater/tags>
 
-To use this image, the following environment variables must be set:
+| Tag      | Description                                                                                                                                                                    |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| edge     | This tag points to the latest version build from the newest [commit](https://github.com/SaraSmiseth/dynv6-updater/commits/dev) in the dev branch.                              |
+| nightly  | This tag points to the latest version build from the newest [commit](https://github.com/SaraSmiseth/dynv6-updater/commits/dev) in the dev branch. It gets rebuild every night. |
+| latest   | This tag points to the latest version build from the latest commit that is tagged in git. See [releases](https://github.com/SaraSmiseth/dynv6-updater/releases).               |
+| _vX.Y.Z_ | There is a tag for each [release](https://github.com/SaraSmiseth/dynv6-updater/releases).                                                                                      |
 
-```DYNV6_TOKEN=<token>```
+### Configuration
 
-Enter the token `<token>` for using the API here. You can find the token under `Account` -> `Keys` -> `HTTP Tokens` -> `Token` -> Button `Details`.
+To use this image, the following environment variables are available:
 
-```DYNV6_ZONES=<zones>```
-
-Enter the list of zones (`<zones>`) to be updated here. If several zones are to be updated, the list must be separated by commas. At least one fully qualified zone must be specified (Example: `myzone.dynv6.net` or `myzone1.dynv6.net,myzone2.dynv6.net`).
-
-## Intended enhancements
-
-The following functions are conceivable for later versions, but were not implemented due to current requirements and the time available. If you are interested in a further development, please write an issue or make a pull request with the appropriate enhancement:
-
-- Verbose mode
-- Reduction of the image
-- Renouncement of the Python:3 image
-- ...
+| Variable                | Description                                                                                                                                                                                                                                       | Type       | Default value |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- | ------------- |
+| DYNV6_TOKEN             | Enter the token for using the API here. You can find the token under `Account` -> `Keys` -> `HTTP Tokens` -> `Token` -> Button `Details`.                                                                                                         | _required_ |               |
+| DYNV6_ZONES             | Enter the list of zones to be updated here. If several zones are to be updated, the list must be separated by commas. At least one fully qualified zone must be specified (Example: `myzone.dynv6.net` or `myzone1.dynv6.net,myzone2.dynv6.net`). | _required_ |               |
+| DYNV6_NETWORK_DEVICE    | Enter the name of your network interface. You can find it with `ip a`.                                                                                                                                                                            | _required_ |               |
+| DYNV6_IP_ADDRESS_FILTER | A string that is used with grep to filter the result of `ip -6 addr show "$DYNV6_NETWORK_DEVICE"`.                                                                                                                                                | optional   |               |
+| DYNV6_USE_AUTO          | Calls the api with parameters set to `auto`.                                                                                                                                                                                                      | optional   | false         |
 
 ## Credits
 
-Appreciation to  
+Appreciation to
 
 - [corny](https://gist.github.com/corny)
 - [pulsar256](https://gist.github.com/pulsar256)
 - [nephilim75](https://gist.github.com/nephilim75)
 - [R. Fuehrer](https://github.com/rfuehrer)
 
-whose adaptations and inspirations are included in the image and script. 
+whose adaptations and inspirations are included in the image and script.
 
 In reference to gists:
 
