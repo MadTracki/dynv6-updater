@@ -49,15 +49,15 @@ jobs:
           context: ./ 
           file: ./Dockerfile
           builder: ${{ steps.buildx.outputs.name }}
-          build-args:
-            - VERSION=${{ steps.prepare.outputs.version }}
-            - BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
-            - VCS_REF=${{ GITHUB_SHA::8 }}
+          build-args: |
+            VERSION=${{ steps.prepare.outputs.version }}
+            BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+            VCS_REF=${{ GITHUB_SHA::8 }}
           platforms: ${{ steps.prepare.outputs.docker_platforms }}
           push: true
-          tags:
-            - ${{ secrets.DOCKER_USERNAME }}/dynv6-updater:${{ steps.prepare.outputs.version }}
-            - ${{ secrets.DOCKER_USERNAME }}/dynv6-updater:latest
+          tags: |
+            ${{ secrets.DOCKER_USERNAME }}/dynv6-updater:${{ steps.prepare.outputs.version }}
+            ${{ secrets.DOCKER_USERNAME }}/dynv6-updater:latest
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
 
