@@ -46,7 +46,8 @@ update_host()
             true
         else
             # Local and Remote IPs did not change. Exit.
-            return
+            # echo "IP unchanged."
+            return 0
         fi
     else
         echo "$(date +"%Y-%m-%d %T"): [LOCAL] New ip address detected. Old: $old_ip New:$current_local_ip. Updating ip for $hostname."
