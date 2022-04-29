@@ -23,35 +23,46 @@ update_host()
         return 1
     fi
 
-    # scope global to return the external ip with subnet mask and don't include deprecated addresses
-    current_ip=$(ip -6 addr show "$DYNV6_NETWORK_DEVICE" | grep "scope global" | grep -v "deprecated" | grep "$DYNV6_IP_ADDRESS_FILTER" | grep -oP '(?<=inet6\s)[\da-f:]+\/\d+')
-    if [[ -z "$current_ip" ]]; then
+    # scope global to return the external ip with subnet mask and don't include local addresses
+    current_local_ip=$(ip -6 addr list scope global $DYNV6_NETWORK_DEVICE | grep -v " fd" | sed -n 's/.*inet6 \([0-9a-f:]\+\).*/\1/p' | head -n 1)
+    if [[ -z "$current_local_ip" ]]; then
         echo "$(date +"%Y-%m-%d %T"): Unable to detect current ip. Exiting."
         return 1
     fi
 
     current_ip_file=/root/current_ip/${hostname}
-    local old
-    [ -e "$current_ip_file" ] && old="$(cat "$current_ip_file")"
+    local old_ip
+    [ -e "$current_ip_file" ] && old_ip="$(cat "$current_ip_file")"
 
-    #echo "old: $old, current_ip: $current_ip"
-    if [ "$old" = "$current_ip" ]; then
-        #echo "IP address unchanged."
-        return
+    if [ "$old_ip" = "$current_local_ip" ]; then
+        # Local check: Ip address unchanged
+        # Additionally do a real dns lookup via dig
+        current_dig_ip=$(dig @ns1.dynv6.com $hostname aaaa +short | sed -n 's/\([0-9a-f:]\+\)/\1/p' | head -n 1)
+        if [[ -z "$current_dig_ip" ]]; then
+            echo "$(date +"%Y-%m-%d %T"): [REMOTE] Could not resolve the ip of $hostname. Updating."
+            true 
+        elif [[ "$current_local_ip" != "$current_dig_ip" ]]; then
+            echo "$(date +"%Y-%m-%d %T"): [REMOTE] Resolving IP of $hostname did not match local ip. Remote: $current_dig_ip Local: $current_local_ip. Updating."
+            true
+        else
+            # Local and Remote IPs did not change. Exit.
+            return
+        fi
+    else
+        echo "$(date +"%Y-%m-%d %T"): [LOCAL] New ip address detected. Old: $old_ip New:$current_local_ip. Updating ip for $hostname."
+        true
     fi
-
-    echo "$(date +"%Y-%m-%d %T"): New ip address detected: $current_ip. Updating ip for $hostname."
 
     if [ "$DYNV6_USE_AUTO" = "true" ]; then
         $bin "https://ipv6.dynv6.com/api/update?hostname=$hostname&token=$DYNV6_TOKEN&ipv6=auto&ipv6prefix=auto"
     else
         # send addresses to dynv6
-        echo "$(date +"%Y-%m-%d %T"): Calling: $bin https://dynv6.com/api/update?hostname=$hostname&token=$DYNV6_TOKEN&ipv6=$current_ip"
-        $bin "https://dynv6.com/api/update?hostname=$hostname&token=$DYNV6_TOKEN&ipv6=$current_ip"
+        echo "$(date +"%Y-%m-%d %T"): Calling: $bin https://dynv6.com/api/update?hostname=$hostname&token=$DYNV6_TOKEN&ipv6=$current_local_ip"
+        $bin "https://dynv6.com/api/update?hostname=$hostname&token=$DYNV6_TOKEN&ipv6=$current_local_ip"
     fi
 
     # save current address
-    echo "$current_ip" > "$current_ip_file"
+    echo "$current_local_ip" > "$current_ip_file"
 )
 
 # Start working

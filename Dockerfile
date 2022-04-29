@@ -3,6 +3,7 @@ FROM alpine:latest
 RUN apk update && apk add \
     bash \
     grep \
+    bind-tools \
     && rm -rf /var/cache/apk/*
 
 RUN echo "*	*	*	*	*	run-parts /etc/periodic/1min" >> /etc/crontabs/root
