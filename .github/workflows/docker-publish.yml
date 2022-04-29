@@ -12,6 +12,18 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+
+      - name: Prepare
+        id: prepare
+        run: |
+          DOCKER_PLATFORMS=linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8,linux/s390x
+          VERSION=edge
+          if [[ $GITHUB_REF == refs/tags/* ]]; then
+            VERSION=${GITHUB_REF#refs/tags/v}
+          fi
+          
+          echo ::set-output name=docker_platforms::${DOCKER_PLATFORMS}
+          echo ::set-output name=version::${VERSION}
       
       - name: Set up Docker Buildx
         id: buildx
@@ -37,8 +49,15 @@ jobs:
           context: ./ 
           file: ./Dockerfile
           builder: ${{ steps.buildx.outputs.name }}
+          build-args:
+            - VERSION=${{ steps.prepare.outputs.version }}
+            - BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+            - VCS_REF=${{ GITHUB_SHA::8 }}
+          platforms: ${{ steps.prepare.outputs.docker_platforms }}
           push: true
-          tags: madtracki/dynv6-updater:latest
+          tags:
+            - ${{ secrets.DOCKER_USERNAME }}/dynv6-updater:${{ steps.prepare.outputs.version }}
+            - ${{ secrets.DOCKER_USERNAME }}/dynv6-updater:latest
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
 
