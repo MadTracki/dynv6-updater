@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# based on https://github.com/SaraSmiseth/dynv6-updater
 # based on https://gist.github.com/corny/7a07f5ac901844bd20c9
 
 # This file can not have a file extension.

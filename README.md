@@ -21,7 +21,7 @@ This image is for use in a private network behind a router. Make sure that the s
 
 ## Installation
 
-A prepared image can be obtained from my [Docker Hub](https://hub.docker.com/r/sarasmiseth/dynv6-updater).
+A prepared image can be obtained from my [Docker Hub](https://hub.docker.com/r/madtracki/dynv6-updater).
 
 ### Build
 
@@ -34,19 +34,17 @@ docker build . -t dynv6-updater
 ## Run
 
 I recommend using `docker-compose`.
-See example [docker-compose.yml](https://github.com/SaraSmiseth/dynv6-updater/blob/dev/docker-compose.yml).
+See example [docker-compose.yml](https://github.com/MadTracki/dynv6-updater/blob/dev/docker-compose.yml).
 Adjust the environment variables to match your use case and then just start the image with `docker compose up -d`.
 
 ### Docker tags
 
-<https://hub.docker.com/r/sarasmiseth/dynv6-updater/tags>
+<https://hub.docker.com/r/madtracki/dynv6-updater/tags>
 
 | Tag      | Description                                                                                                                                                                    |
 | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| edge     | This tag points to the latest version build from the newest [commit](https://github.com/SaraSmiseth/dynv6-updater/commits/dev) in the dev branch.                              |
-| nightly  | This tag points to the latest version build from the newest [commit](https://github.com/SaraSmiseth/dynv6-updater/commits/dev) in the dev branch. It gets rebuild every night. |
-| latest   | This tag points to the latest version build from the latest commit that is tagged in git. See [releases](https://github.com/SaraSmiseth/dynv6-updater/releases).               |
-| _vX.Y.Z_ | There is a tag for each [release](https://github.com/SaraSmiseth/dynv6-updater/releases).                                                                                      |
+| latest   | This tag points to the latest version build from the latest commit that is tagged in git. See [releases](https://github.com/MadTracki/dynv6-updater/releases).               |
+| _vX.Y.Z_ | There is a tag for each [release](https://github.com/MadTracki/dynv6-updater/releases).                                                                                      |
 
 ### Configuration
 
@@ -64,6 +62,7 @@ To use this image, the following environment variables are available:
 
 Appreciation to
 
+- [SaraSmith](https://github.com/SaraSmiseth/)
 - [corny](https://gist.github.com/corny)
 - [pulsar256](https://gist.github.com/pulsar256)
 - [nephilim75](https://gist.github.com/nephilim75)
@@ -78,7 +77,7 @@ In reference to gists:
 
 ## Fork
 
-Forked from [rfuehrer/dynv6-updater](https://github.com/rfuehrer/dynv6-updater).
+Forked from [SaraSmiseth/dynv6-updater](https://github.com/SaraSmiseth/dynv6-updater).
 
 ## License
 

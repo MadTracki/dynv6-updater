@@ -2,7 +2,7 @@ version: "3.7"
 
 services:
   dynv6-updater:
-    image: sarasmiseth/dynv6-updater
+    image: madtracki/dynv6-updater
     restart: unless-stopped
     environment:
       - DYNV6_ZONES=dynv6.example.com,second.example.com
